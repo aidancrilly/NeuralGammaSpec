@@ -27,4 +27,8 @@ class DetectorModel():
         S = tf.matmul(N,self.R_tensor)
         return S
     
+# Default set up
+E_detector = np.arange(0, 1000, 1) + 0.5
 detectormodel = DetectorModel('./InputData/Rfinal.csv')
+detectormodel.regrid(E_detector)
+detectormodel.tensorize()

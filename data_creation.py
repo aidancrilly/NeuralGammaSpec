@@ -55,6 +55,7 @@ def load_traintest_data(index,test_size=0.3,dataset=None):
     else:
         raise NotImplementedError()
     
+    # Do we need this with validation split?
     X_train, X_test, y_train, y_test = train_test_split(X,Y,test_size=test_size)
     return X_train, X_test, y_train, y_test
     
