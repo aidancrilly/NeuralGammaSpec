@@ -80,8 +80,12 @@ def load_traintest_data(stage,seed = 12436,test_size=0.3):
         Y = rng.shuffle(Y)
     elif stage == 2:
         # Use defaults
-        X = np.loadtxt('./InputData/stage2X.csv', delimiter=',')
-        Y = np.loadtxt('./InputData/stage2Y.csv', delimiter=',')
+        X1 = np.loadtxt('./InputData/stage1X.csv', delimiter=',')
+        Y1 = np.loadtxt('./InputData/stage1Y.csv', delimiter=',')
+        X2 = np.loadtxt('./InputData/stage2X.csv', delimiter=',')
+        Y2 = np.loadtxt('./InputData/stage2Y.csv', delimiter=',')
+        X = np.concatenate([X1,X2])
+        Y = np.concatenate([Y1,Y2])
         # Additional shuffling
         rng = np.random.default_rng(seed=seed)
         X = rng.shuffle(X)
