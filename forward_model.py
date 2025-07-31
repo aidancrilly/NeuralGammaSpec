@@ -4,10 +4,11 @@ from scipy.interpolate import CubicSpline
 
 class DetectorModel():
 
-    def __init__(self,filename,dE=1.0,E0=1.0):
-        self.R_filename = filename
+    def __init__(self,Rfilename,Efilename):
+        self.R_filename = Rfilename
+        self.E_filename = Efilename
         self.R = np.loadtxt(self.R_filename, delimiter=',').T
-        self.E = E0 + np.arange(self.R.shape[0])*dE
+        self.E = np.loadtxt(self.E_filename, delimiter=',')
         self.NE = self.R.shape[1]
         assert self.NE == len(self.E)
         self.ND = self.R.shape[0]
@@ -23,12 +24,17 @@ class DetectorModel():
     def tensorize(self):
         self.R_tensor = tf.convert_to_tensor(self.R, tf.float32)
 
-    def __call__(self,N):
-        S = tf.matmul(N,self.R_tensor)
+    def numpy_matmul(self,N):
+        S = np.matmul(self.R,N)
         return S
-    
+
+    def __call__(self,N):
+        S = tf.matmul(self.R_tensor,N)
+        return S
+
 # Default set up
 E_detector = np.arange(0, 1000, 1) + 0.5
-detectormodel = DetectorModel('./InputData/Rfinal.csv')
+detectormodel = DetectorModel('./InputData/Rfinal.csv','./InputData/Ey_R.csv')
 detectormodel.regrid(E_detector)
 detectormodel.tensorize()
+

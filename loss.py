@@ -1,22 +1,8 @@
 import tensorflow as tf
 
-def create_custom_loss(loss_identifier, detector, loss_weights):
+def create_custom_loss(detector, loss_weights):
 
     def custom_loss(y_true, y_pred):
-        y_true = tf.convert_to_tensor(y_true, dtype=tf.float32)
-        y_pred = tf.convert_to_tensor(y_pred, dtype=tf.float32)
-
-        mse_loss = tf.keras.losses.MeanSquaredError()(y_true, y_pred)
-        transformed_pred = detector(tf.exp(y_pred))
-        transformed_pred = transformed_pred/tf.reduce_mean(transformed_pred)
-        transformed_true = detector(tf.exp(y_true))
-        transformed_true = transformed_true/tf.reduce_mean(transformed_true)
-        matrix_mse_loss = tf.keras.losses.MeanSquaredError()(transformed_true, transformed_pred)
-
-        total_loss = mse_loss + loss_weights[0] * matrix_mse_loss
-        return total_loss
-
-    def custom_loss2(y_true, y_pred):
         y_true = tf.convert_to_tensor(y_true, dtype=tf.float32)
         y_pred = tf.convert_to_tensor(y_pred, dtype=tf.float32)
 
@@ -45,10 +31,5 @@ def create_custom_loss(loss_identifier, detector, loss_weights):
 
         total_loss = mse_loss + loss_weights[0] * matrix_mse_loss + loss_weights[1] * diff_sum_loss
         return total_loss
-    
-    if(loss_identifier == 0):
-        return custom_loss
-    elif(loss_identifier == 1):
-        return custom_loss2
-    else:
-        raise NotImplementedError()
+
+    return custom_loss
