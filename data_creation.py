@@ -188,11 +188,13 @@ def generate_training_data():
     stage2X = []
     stage2Y = []
 
+    K_matrix = np.loadtxt('./InputData/Relectron.csv')
+
     epsilons = np.geomspace(1,800, num=40)
     for epsilon in epsilons:
         for popt in popts:
             for trial in range(numrepeats):
-                spec_model = lambda E: fit_func(E, *popt)
+                spec_model = lambda E: np.matmul(K_matrix,popt)
                 trialvary, trialSs = generate_noised_spectra_and_signals(Eys,spec_model,epsilon,detectormodel)
                 stage2X = stage2X + trialvary
                 stage2Y = stage2Y + trialSs
